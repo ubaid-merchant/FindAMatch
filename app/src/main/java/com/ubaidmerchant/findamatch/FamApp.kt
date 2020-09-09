@@ -3,8 +3,12 @@ package com.ubaidmerchant.findamatch
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.ubaidmerchant.findamatch.utils.isNight
+import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class FindAMatchApp() : Application() {
+@ExperimentalCoroutinesApi
+@HiltAndroidApp
+class FamApp : Application() {
     override fun onCreate() {
         super.onCreate()
 

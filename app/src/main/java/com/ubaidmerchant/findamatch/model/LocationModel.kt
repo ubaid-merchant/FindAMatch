@@ -1,11 +1,16 @@
 package com.ubaidmerchant.findamatch.model
 
+import androidx.room.Embedded
+
 data class LocationModel(
-    val street: StreetModel,
-    val city: String,
-    val state: String,
-    val country: String,
-    val postcode: Int,
-    val coordinates: CoordinatesModel,
-    val timezone: TimezoneModel
+    @field:Embedded(prefix = "street")
+    val street: StreetModel?,
+    val city: String?,
+    val state: String?,
+    val country: String?,
+    val postcode: String?,
+    @field:Embedded(prefix = "coordinates")
+    val coordinates: CoordinatesModel?,
+    @field:Embedded(prefix = "timezone")
+    val timezone: TimezoneModel?
 )
