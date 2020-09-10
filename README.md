@@ -16,26 +16,20 @@ Visit:- [ubaidmerchant.com](https://www.ubaidmerchant.com)
 This app uses MVVM (Model View View-Model) architecture.
 
 **Package Structure**  
-com.ubaidmerchant.findamatch # Root Package
 
-|  
-├── data                # For data handling.
-│   ├── local           # Local Persistence Database. Room (SQLite) database
-|   │   ├── dao         # Data Access Object for Room 
-│   ├── remote          # Remote Data Handlers
-|   │   ├── api         # Retrofit API for remote end point.
-│   └── repo			# Single source of data.
-|
-├── di                  # Dependency Injection
-│   └── module          # DI Modules
-|
-├── model               # Model classes
-|
-├── ui                  # Activity/View layer
-│   ├── base            # Base View
-│   ├── main            # Main Screen Activity & ViewModel
-|   │   ├── adapter     # Adapter for RecyclerView
-|   │   └── viewmodel   # ViewHolder for RecyclerView
-|
-└── utils               # Utility Classes / Kotlin extensions  
-|
+com.ubaidmerchant.findamatch            # Root Package
+=> data                                 # For data handling.
+=> data => local                        # Local Persistence Database. Room (SQLite) database
+=> data => local => dao                 # Data Access Object for Room
+=> data => remote                       # Remote Data Handlers
+=> data => remote => api                # Retrofit API for remote end point.
+=> data => repo			                    # Single source of data.
+=> data => di                           # Dependency Injection
+=> data => di => module                 # DI Modules
+=> data => model                        # Model classes
+=> data => ui                           # Activity/View layer
+=> data => ui => base                   # Base View
+=> data => ui => main                   # Main Screen Activity & ViewModel
+=> data => ui => main => adapter        # Adapter for RecyclerView
+=> data => ui => main => viewmodel      # ViewHolder for RecyclerView
+=> data => utils                        # Utility Classes / Kotlin extensions
