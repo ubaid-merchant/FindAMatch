@@ -10,10 +10,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ubaidmerchant.findamatch.R
 import com.ubaidmerchant.findamatch.databinding.ActivityMainBinding
+import com.ubaidmerchant.findamatch.model.ResultsModel
 import com.ubaidmerchant.findamatch.model.State
 import com.ubaidmerchant.findamatch.ui.base.BaseActivity
+import com.ubaidmerchant.findamatch.ui.main.adapter.CardListAdapter
 import com.ubaidmerchant.findamatch.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,12 +29,21 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     override fun getViewBinding(): ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
 
+    private val mAdapter = CardListAdapter(this::onItemClicked)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme) // Set AppTheme before setting content view.
         super.onCreate(savedInstanceState)
         setContentView(mViewBinding.root)
 
+        // Initialize RecyclerView
+        mViewBinding.cardsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = mAdapter
+        }
+
         initResults()
+
         handleNetworkChanges()
     }
 
@@ -43,8 +55,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                     is State.Loading -> showLoading(true)
                     is State.Success -> {
                         if (state.data.isNotEmpty()) {
-                            showToast("Success")
-//                            mAdapter.submitList(state.data.toMutableList())
+                            mAdapter.submitList(state.data.toMutableList())
                             showLoading(false)
                         }
                     }
@@ -85,12 +96,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                     mViewBinding.textViewNetworkStatus.text =
                         getString(R.string.text_no_connectivity)
                     mViewBinding.networkStatusLayout.apply {
-                        show()
+                        visible()
                         setBackgroundColor(getColorRes(R.color.colorStatusNotConnected))
                     }
                 } else {
-                    if (mViewModel.resultsLiveData.value is State.Error) {
-//                        || mAdapter.itemCount == 0) {
+                    if (mViewModel.resultsLiveData.value is State.Error || mAdapter.itemCount == 0) {
                         getResults()
                     }
                     mViewBinding.textViewNetworkStatus.text = getString(R.string.text_connectivity)
@@ -103,7 +113,7 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                             .setDuration(ANIMATION_DURATION)
                             .setListener(object : AnimatorListenerAdapter() {
                                 override fun onAnimationEnd(animation: Animator) {
-                                    hide()
+                                    gone()
                                 }
                             }
                             )
@@ -111,6 +121,10 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                 }
             }
         )
+    }
+
+    private fun onItemClicked(result: ResultsModel) {
+        mViewModel.updateStatus(result, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

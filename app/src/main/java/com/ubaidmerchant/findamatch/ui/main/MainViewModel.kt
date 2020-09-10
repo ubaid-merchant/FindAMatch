@@ -9,6 +9,7 @@ import com.ubaidmerchant.findamatch.data.repo.ResultsRepository
 import com.ubaidmerchant.findamatch.model.ResultsModel
 import com.ubaidmerchant.findamatch.model.State
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,13 @@ class MainViewModel @ViewModelInject constructor(private val resultsRepository: 
             resultsRepository.getAllResults().collect {
                 _resultsLiveData.value = it
             }
+        }
+    }
+
+    fun updateStatus(result: ResultsModel, selected: Boolean) {
+        val status = if (selected) "Accepted" else "Declined"
+        viewModelScope.async {
+            resultsRepository.updateStatus(result.copy(isSelected = selected, status = status))
         }
     }
 }

@@ -17,5 +17,5 @@ class FamDatabaseModule {
 
     @Singleton
     @Provides
-    fun providePostsDao(database: FamResultsDatabase) = database.getResultsDao()
+    fun provideResultsDao(database: FamResultsDatabase) = database.getResultsDao()
 }

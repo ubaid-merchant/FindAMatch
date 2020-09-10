@@ -1,6 +1,7 @@
 package com.ubaidmerchant.findamatch.data.repo
 
 import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import com.ubaidmerchant.findamatch.data.local.dao.ResultsDao
 import com.ubaidmerchant.findamatch.data.remote.api.FamService
 import com.ubaidmerchant.findamatch.data.remote.api.FamService.Companion.RESULTS_COUNT
@@ -25,14 +26,12 @@ class ResultsRepository @Inject constructor(
     private val resultsDao: ResultsDao,
     private val famService: FamService
 ) {
-
     /**
-     * Fetched the posts from network and stored it in database. At the end, data from persistence
+     * Fetched the results from network and stored it in database. At the end, data from persistence
      * storage is fetched and emitted.
      */
     fun getAllResults(): Flow<State<List<ResultsModel>>> {
         return object : NetworkBoundRepository<List<ResultsModel>, ResponseModel>() {
-
             override suspend fun saveRemoteData(response: ResponseModel) =
                 resultsDao.insertResults(response.results)
 
@@ -50,4 +49,12 @@ class ResultsRepository @Inject constructor(
      */
     @MainThread
     fun getResultById(emailId: String): Flow<ResultsModel> = resultsDao.getResultById(emailId)
+
+    /**
+     * Updates a result with specified [emailId].
+     * @param emailId Unique id of a [ResultsModel].
+     * @return [ResultsModel] data to be updated in the database.
+     */
+    @WorkerThread
+    fun updateStatus(result: ResultsModel) = resultsDao.updateResults(result)
 }

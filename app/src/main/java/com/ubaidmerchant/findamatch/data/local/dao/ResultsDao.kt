@@ -1,9 +1,6 @@
 package com.ubaidmerchant.findamatch.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.ubaidmerchant.findamatch.model.ResultsModel
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +17,9 @@ interface ResultsDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertResults(results: ArrayList<ResultsModel>?)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateResults(vararg result: ResultsModel)
 
     /**
      * Deletes all the results from the [ResultsModel.TABLE_NAME] table.

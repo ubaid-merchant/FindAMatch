@@ -13,4 +13,8 @@ data class LocationModel(
     val coordinates: CoordinatesModel?,
     @field:Embedded(prefix = "timezone")
     val timezone: TimezoneModel?
-)
+) {
+    fun getDescription(): String {
+        return street?.number.toString() + "," + street?.name + ",\n" + city + "," + state + "," + country + "," + state + "," + postcode
+    }
+}

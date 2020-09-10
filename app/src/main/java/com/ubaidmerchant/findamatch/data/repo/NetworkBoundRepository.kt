@@ -32,7 +32,7 @@ abstract class NetworkBoundRepository<RESULT, REQUEST> {
 
         // Check for response validation
         if (apiResponse.isSuccessful && remoteResults != null) {
-            // Save posts into the persistence storage
+            // Save results into the persistence storage
             saveRemoteData(remoteResults)
         } else {
             // Something went wrong! Emit Error state.

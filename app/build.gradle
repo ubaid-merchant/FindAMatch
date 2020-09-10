@@ -79,6 +79,10 @@ dependencies {
   kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
   kapt 'com.google.dagger:hilt-android-compiler:2.28-alpha'
 
+  // Coil-kt
+  implementation 'io.coil-kt:coil:0.11.0'
+
+  // Android Testing
   testImplementation 'junit:junit:4.13'
   androidTestImplementation 'androidx.test.ext:junit:1.1.2'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

@@ -7,4 +7,12 @@
     <color name="colorStatusConnected">#43A047</color>
     <color name="colorStatusNotConnected">#D32F2F</color>
     <color name="bulbColor">@android:color/black</color>
+    <color name="card_background">@android:color/white</color>
+    <color name="textColor">@android:color/black</color>
+    <color name="text_color_white">@android:color/white</color>
+    <color name="imageBackgroundTint">#C3C3C3</color>
+
+    <color name="windowBackground">#F3F3F3</color>
+    <color name="statusBarColor">@android:color/white</color>
+    <color name="placeholderColor">#969696</color>
 </resources>

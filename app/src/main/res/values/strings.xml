@@ -7,4 +7,8 @@
     <string name="option_yes">Yes</string>
     <string name="option_no">No</string>
     <string name="theme">Theme</string>
+    <string name="text_card_header">Card Header</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+    <string name="accepted">Accepted</string>
 </resources>
