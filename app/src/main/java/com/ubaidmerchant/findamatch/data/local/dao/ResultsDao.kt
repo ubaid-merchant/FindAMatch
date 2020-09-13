@@ -11,34 +11,26 @@ import kotlinx.coroutines.flow.Flow
 interface ResultsDao {
 
     /**
-     * Inserts [results] into the [ResultsModel.TABLE_NAME] table.
+     * Inserts [result] into the [ResultsModel.TABLE_NAME] table.
      * Duplicate values are replaced in the table.
-     * @param results ResultsModel
+     * @param result ResultsModel
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertResults(results: ArrayList<ResultsModel>?)
+    suspend fun insertResult(result: ResultsModel)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateResults(vararg result: ResultsModel)
+    suspend fun updateResult(result: ResultsModel)
 
     /**
      * Deletes all the results from the [ResultsModel.TABLE_NAME] table.
      */
     @Query("DELETE FROM ${ResultsModel.TABLE_NAME}")
-    fun deleteAllResults()
-
-    /**
-     * Fetches the result from the [ResultsModel.TABLE_NAME] table whose id is [emailId].
-     * @param emailId Unique ID of [ResultsModel]
-     * @return [Flow] of [ResultsModel] from database table.
-     */
-    @Query("SELECT * FROM ${ResultsModel.TABLE_NAME} WHERE EMAIL = :emailId")
-    fun getResultById(emailId: String): Flow<ResultsModel>
+    suspend fun deleteAllResults()
 
     /**
      * Fetches all the results from the [ResultsModel.TABLE_NAME] table.
      * @return [Flow]
      */
     @Query("SELECT * FROM ${ResultsModel.TABLE_NAME}")
-    fun getAllResults(): Flow<List<ResultsModel>>
+    suspend fun getAllResults(): List<ResultsModel>
 }

@@ -43,7 +43,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         }
 
         initResults()
-
         handleNetworkChanges()
     }
 
@@ -68,11 +67,6 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         )
 
         mViewBinding.swipeRefreshLayout.setOnRefreshListener {
-            getResults()
-        }
-
-        // If State isn't `Success` then reload results.
-        if (mViewModel.resultsLiveData.value !is State.Success) {
             getResults()
         }
     }
@@ -123,8 +117,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
         )
     }
 
-    private fun onItemClicked(result: ResultsModel) {
-        mViewModel.updateStatus(result, true)
+    private fun onItemClicked(result: ResultsModel, status: Boolean) {
+        mViewModel.updateResult(result, status)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

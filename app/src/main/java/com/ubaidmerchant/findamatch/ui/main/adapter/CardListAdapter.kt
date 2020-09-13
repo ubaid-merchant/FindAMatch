@@ -14,7 +14,7 @@ import com.ubaidmerchant.findamatch.ui.main.viewholder.CardViewHolder
  * @param onItemClicked which will receive callback when item is clicked.
  */
 class CardListAdapter(
-    private val onItemClicked: (ResultsModel) -> Unit
+    private val onItemClicked: (ResultsModel, Boolean) -> Unit
 ) : ListAdapter<ResultsModel, CardViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CardViewHolder(

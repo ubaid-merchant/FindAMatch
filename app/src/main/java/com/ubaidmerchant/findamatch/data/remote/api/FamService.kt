@@ -16,6 +16,6 @@ interface FamService {
 
     companion object {
         const val FAM_RESULTS_API_URL = "https://randomuser.me/"
-        const val RESULTS_COUNT = 1
+        const val RESULTS_COUNT = 10
     }
 }

@@ -1,18 +1,15 @@
 package com.ubaidmerchant.findamatch.data.repo
 
-import androidx.annotation.MainThread
-import androidx.annotation.WorkerThread
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.ubaidmerchant.findamatch.data.local.dao.ResultsDao
 import com.ubaidmerchant.findamatch.data.remote.api.FamService
 import com.ubaidmerchant.findamatch.data.remote.api.FamService.Companion.RESULTS_COUNT
-import com.ubaidmerchant.findamatch.model.ResponseModel
 import com.ubaidmerchant.findamatch.model.ResultsModel
 import com.ubaidmerchant.findamatch.model.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import retrofit2.Response
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,35 +23,56 @@ class ResultsRepository @Inject constructor(
     private val resultsDao: ResultsDao,
     private val famService: FamService
 ) {
-    /**
-     * Fetched the results from network and stored it in database. At the end, data from persistence
-     * storage is fetched and emitted.
-     */
-    fun getAllResults(): Flow<State<List<ResultsModel>>> {
-        return object : NetworkBoundRepository<List<ResultsModel>, ResponseModel>() {
-            override suspend fun saveRemoteData(response: ResponseModel) =
-                resultsDao.insertResults(response.results)
+    private var resultsList: MutableLiveData<State<List<ResultsModel>>> = MutableLiveData()
 
-            override fun fetchFromLocal(): Flow<List<ResultsModel>> = resultsDao.getAllResults()
-
-            override suspend fun fetchFromRemote(): Response<ResponseModel> =
-                famService.getResults(RESULTS_COUNT)
-        }.asFlow().flowOn(Dispatchers.IO)
+    init {
+        resultsList.value = State.loading()
     }
 
-    /**
-     * Retrieves a result with specified [emailId].
-     * @param emailId Unique id of a [ResultsModel].
-     * @return [ResultsModel] data fetched from the database.
-     */
-    @MainThread
-    fun getResultById(emailId: String): Flow<ResultsModel> = resultsDao.getResultById(emailId)
+    suspend fun getAllResults(): MutableLiveData<State<List<ResultsModel>>> {
+        val allResults = resultsDao.getAllResults()
+        if (allResults.isNotEmpty()) {
+            resultsList.value = State.success(allResults)
+            Log.d("getAllResults", "local")
+        } else {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    famService.getResults(RESULTS_COUNT)
+                }
+                try {
+                    if (response.isSuccessful) {
+                        val resp = response.body()
+                        Log.d("getResults", resp?.results.toString())
+                        withContext(Dispatchers.IO) {
+                            resp?.results?.forEach {
+                                resultsDao.insertResult(it)
+                            }
+                        }
+                        resp?.results?.let {
+                            resultsList.value = State.success(it.toList())
+                            Log.d("getResults", "server")
+                        }
+                    } else {
+                        resultsList.postValue(State.error(response.message()))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    resultsList.value = State.error(e.message.toString())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                resultsList.value = State.error(e.message.toString())
+            }
+        }
 
-    /**
-     * Updates a result with specified [emailId].
-     * @param emailId Unique id of a [ResultsModel].
-     * @return [ResultsModel] data to be updated in the database.
-     */
-    @WorkerThread
-    fun updateStatus(result: ResultsModel) = resultsDao.updateResults(result)
+        return resultsList
+    }
+
+    suspend fun updateResult(result: ResultsModel): MutableLiveData<State<List<ResultsModel>>> {
+        withContext(Dispatchers.IO) {
+            resultsDao.updateResult(result)
+        }
+        resultsList.value = State.success(resultsDao.getAllResults())
+        return resultsList
+    }
 }

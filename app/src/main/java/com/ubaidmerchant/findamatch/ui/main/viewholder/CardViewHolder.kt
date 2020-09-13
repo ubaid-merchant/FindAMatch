@@ -5,6 +5,7 @@ import coil.api.load
 import com.ubaidmerchant.findamatch.R
 import com.ubaidmerchant.findamatch.databinding.ItemCardBinding
 import com.ubaidmerchant.findamatch.model.ResultsModel
+import com.ubaidmerchant.findamatch.ui.main.adapter.CardListAdapter
 import com.ubaidmerchant.findamatch.utils.gone
 import com.ubaidmerchant.findamatch.utils.visible
 
@@ -14,11 +15,14 @@ import com.ubaidmerchant.findamatch.utils.visible
  */
 class CardViewHolder(private val binding: ItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(result: ResultsModel, onItemClicked: (ResultsModel) -> Unit) {
+    fun bind(result: ResultsModel, onItemClicked: (ResultsModel, Boolean) -> Unit) {
         if (result.isSelected) {
             binding.clActions.gone()
             binding.tvProfileStatus.text = result.status
             binding.tvProfileStatus.visible()
+        } else {
+            binding.clActions.visible()
+            binding.tvProfileStatus.gone()
         }
 
         binding.tvProfileName.text = result.name?.getName()
@@ -29,14 +33,14 @@ class CardViewHolder(private val binding: ItemCardBinding) : RecyclerView.ViewHo
         }
 
         binding.ivAccept.setOnClickListener {
-            onItemClicked(result)
+            onItemClicked(result, true)
             binding.clActions.gone()
             binding.tvProfileStatus.text = "Accepted"
             binding.tvProfileStatus.visible()
         }
 
         binding.ivDecline.setOnClickListener {
-            onItemClicked(result)
+            onItemClicked(result, false)
             binding.clActions.gone()
             binding.tvProfileStatus.text = "Declined"
             binding.tvProfileStatus.visible()

@@ -9,14 +9,12 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = ResultsModel.TABLE_NAME)
 data class ResultsModel(
-    @PrimaryKey(autoGenerate = true)
-    val primaryKeyId: Int,
     var gender: String? = null,
     @field:Embedded(prefix = "name")
     var name: NameModel? = null,
     @field:Embedded(prefix = "location")
     var location: LocationModel? = null,
-    var email: String,
+    @PrimaryKey var email: String,
     @field:Embedded(prefix = "login")
     var login: LoginModel?,
     @field:Embedded(prefix = "dob")
