@@ -29,8 +29,24 @@ interface ResultsDao {
 
     /**
      * Fetches all the results from the [ResultsModel.TABLE_NAME] table.
-     * @return [Flow]
+     * @return [List]
      */
     @Query("SELECT * FROM ${ResultsModel.TABLE_NAME}")
     suspend fun getAllResults(): List<ResultsModel>
+
+    /**
+     * Fetches all the results from the [ResultsModel.TABLE_NAME] table.
+     * @return [Flow]
+     */
+    @Query("SELECT * FROM ${ResultsModel.TABLE_NAME}")
+    fun getAllResultsAsFlow(): Flow<List<ResultsModel>>
+
+    /**
+     * Fetches the result from the [ResultsModel.TABLE_NAME] table whose id is [emailId].
+     * @param emailId Unique ID of [ResultsModel]
+     * @return [Flow] of [ResultsModel] from database table.
+     */
+    @Query("SELECT * FROM ${ResultsModel.TABLE_NAME} WHERE EMAIL = :emailId")
+    fun getResultById(emailId: String): Flow<ResultsModel>
+
 }

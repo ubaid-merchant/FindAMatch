@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "gender": "male",
+      "email": "male@male.com",
+      "phone": "1234567890",
+      "cell": "9012345678",
+      "nat": "NL"
+    },
+    {
+      "gender": "female",
+      "email": "female@female.com",
+      "phone": "9012345678",
+      "cell": "1234567890",
+      "nat": "IR"
+    }
+  ],
+  "info": {
+    "seed": "37dfe453dc787fd1",
+    "results": 10,
+    "page": 1,
+    "version": "1.3"
+  }
+}
